@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
+use app\models\User;
 
 
 /* @var $this yii\web\View */
@@ -20,8 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Yii::$app->user->isGuest ?  '' :  Html::a('Create Task', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+        <?= Yii::$app->user->can('createTask') ?    Html::a('Create Task', ['create'], ['class' => 'btn btn-success']) : '' ?>
+    </p>   
     <?php Pjax::begin(); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -31,22 +32,25 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'name',
-            'created',
-            'user',
+            'created',           
+             [
+                'attribute'=>'user_id',
+                'label'=>'User', 
+                'content'=>function($model){        
+                    return User::findIdentity($model->user_id)->username;
+                }
+            ],
             
             [
                 'attribute'=>'priority',
-                'label'=>'Status',                
+                'label'=>'Priority',                  
                 'content'=>function($model){
-                     return $model->getPriorityArray()[$model->priority];
+                    return $model->getPriorityArray()[$model->priority];
                 }
             ],
             [
                 'attribute'=>'status',
                 'label'=>'Status',
-                'contentOptions' =>function ($model, $key, $index, $column){
-                    return ['class' => 'name'];
-                },
                 'content'=>function($model){
                      return $model->getStatusArray()[$model->status];
                 }
@@ -67,21 +71,26 @@ $this->params['breadcrumbs'][] = $this->title;
                         return Html::a('Done', ['task/status-update', 'id' =>$model->id], ['class' => 'btn btn-sm btn-primary']);
                     },
                 ],
-               'visible' => !Yii::$app->user->isGuest,
-                
+               'visibleButtons' => [
+                   'delete' => Yii::$app->user->can('createTask'),
+                   'update' => Yii::$app->user->can('createTask'),
+                   'link' => function ($model) {
+                        return Yii::$app->user->can('updateTask', ['author_id' => $model->user_id]);
+                   }
+               ],
             ],            
         ],
         
     ]); ?>
   <?php Pjax::end(); ?>
-  <?=  Yii::$app->user->isGuest ?  '' : 
-       Html::a('All Done', ['task/all-status-update'], [
+  <?=  !Yii::$app->user->isGuest ? 
+       Html::a('All Done', ['task/all-status-update' , 'id'=>Yii::$app->user->id], [
       'class' => 'btn btn-sm btn-primary update-status', 
       'data' => [
             'confirm' =>'Are you sure you want to update all item?',
             'pjax' => 0,            
         ],
-      ])?>
+      ]) : '' ?>
  
 </div>
 

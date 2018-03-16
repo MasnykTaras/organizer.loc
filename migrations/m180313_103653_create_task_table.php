@@ -17,7 +17,7 @@ class m180313_103653_create_task_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
             'created' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
-            'user' => $this->string()->notNull()->defaultValue('None'),
+            'user_id' => $this->integer()->notNull()->defaultValue(1),
             'priority' => $this->integer()->notNull()->defaultValue(0),
             'status' => $this->integer()->notNull()->defaultValue(0),
             'photo' => $this->string(),

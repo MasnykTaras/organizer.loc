@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Task;
+use app\models\User;
 
 /**
  * Searchtask represents the model behind the search form of `app\models\Task`.
@@ -19,7 +20,7 @@ class SearchTask extends Task
     {
         return [
             
-            [['user', 'status', 'priority'], 'string'],
+            [['user_id', 'status', 'priority'], 'string'],
             [['name'], 'safe'],
         ];
     }
@@ -67,9 +68,9 @@ class SearchTask extends Task
         // grid filtering conditions
         $query->andFilterWhere([
             'name' => $this->name,
-            'user' => $this->user,
-            'priority' => (!empty($params['SearchTask']['priority'])) ? $this->getStatusValue($params['SearchTask']['priority']) : $this->status,
-            'status' => (!empty($params['SearchTask']['status'])) ? $this->getPriorityValue($params['SearchTask']['status']) : $this->status,
+            'user_id' =>  User::findByUsername($this->user_id)->id ,
+            'priority' => ($this->getPriorityValue($params['SearchTask']['priority'])) ? $this->getPriorityValue($params['SearchTask']['priority']) : $this->priority,
+            'status' => ($this->getStatusValue($params['SearchTask']['status'])) ? $this->getStatusValue($params['SearchTask']['status']) :  $this->status,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

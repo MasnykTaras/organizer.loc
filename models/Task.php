@@ -12,7 +12,7 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property string $name
  * @property string $created
- * @property int $user
+ * @property int $user_id
  * @property int $priority
  * @property int $status
  * @property string $photo
@@ -40,9 +40,9 @@ class Task extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'user', 'photo'], 'required'],           
+            [['name', 'user_id'], 'required'],           
             [['priority', 'status'], 'integer'],
-            [['name', 'user'], 'string', 'max' => 255],
+            [['name', 'user_id'], 'string', 'max' => 255],
             [['photo'], 'file'],
         ];
     }
@@ -56,7 +56,7 @@ class Task extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'created' => 'Created',
-            'user' => 'User',
+            'user_id' => 'User',
             'priority' => 'Priority',
             'status' => 'Status',
             'photo' => 'Photo',
@@ -69,9 +69,9 @@ class Task extends \yii\db\ActiveRecord
     public  function getStatusArray()
     {
         return [
-             self::NEWTASK => 'New',
-             self::DONETASK => 'Done',
-             self::CANCELEDTASK => 'Canceled',
+             self::NEWTASK => 'new',
+             self::DONETASK => 'done',
+             self::CANCELEDTASK => 'canceled',
         ];
     }
      /**
@@ -81,13 +81,13 @@ class Task extends \yii\db\ActiveRecord
     public  function getPriorityArray()
     {
         return [
-             self::IMPORTANTTASK => 'Important',
-             self::UNIMPORTANTTASK => 'Unimportant',
+             self::IMPORTANTTASK => 'important',
+             self::UNIMPORTANTTASK => 'unimportant',
         ];
     }
     /**
      * Get Status id Value
-     * @param int $status
+     * @param string $status
      * @return int
      */
     public function getStatusValue($status)
@@ -96,11 +96,11 @@ class Task extends \yii\db\ActiveRecord
     }
     /**
      * Get Priority id value
-     * @param int $priority
+     * @param string $priority
      * @return int
      */
     public function getPriorityValue($priority)
-    {
+    {      
         return array_search($priority, $this->getPriorityArray());
     }
    /**

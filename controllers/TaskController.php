@@ -30,6 +30,7 @@ class TaskController extends Controller
                         'actions' => ['logout', 'create', 'index', 'update', 'delete', 'view'],
                         'roles' => ['@'],
                     ],
+                   
                 ],
             ],
             'verbs' => [
@@ -156,20 +157,18 @@ class TaskController extends Controller
         }
     }
     public function actionStatusUpdate($id)
-    {
-        $model = $this->findModel($id);
-        $model->status = Task::DONETASK;
-       
-       $model->save();
-       
+    {       
+        Task::updateAll(['status' => Task::DONETASK], "id = $id");
+        
         return $this->redirect('index');
-      
     }
-     public function actionAllStatusUpdate()
+     public function actionAllStatusUpdate($id)
     {
-        
-        Task::updateAll(['status' => Task::DONETASK]);
-        
+        if($id == 1){
+            Task::updateAll(['status' => Task::DONETASK]);
+        }else{
+            Task::updateAll(['status' => Task::DONETASK], "user_id = $id");
+        }
         return $this->redirect('index');
               
         
