@@ -20,7 +20,7 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     
- 
+    const WEBMASTER = 1;
     /**
      * @inheritdoc
      */

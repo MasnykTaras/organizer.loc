@@ -74,8 +74,8 @@ $this->params['breadcrumbs'][] = $this->title;
                'visibleButtons' => [
                    'delete' => Yii::$app->user->can('createTask'),
                    'update' => Yii::$app->user->can('createTask'),
-                   'link' => function ($model) {
-                        return Yii::$app->user->can('updateTask', ['author_id' => $model->user_id]);
+                   'link' => function ($model) {                       
+                        return Yii::$app->user->can('updateTask', ['author_id' => $model->user_id]);                                             
                    }
                ],
             ],            

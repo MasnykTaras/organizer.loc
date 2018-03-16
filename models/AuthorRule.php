@@ -2,7 +2,7 @@
 namespace app\models;
 
 use yii\rbac\Rule;
-
+use app\models\User;
 /**
  * Checks if authorID matches user passed via params
  */
@@ -18,10 +18,13 @@ class AuthorRule extends Rule
      */
     public function execute($user, $item, $params)
     {
-        
-        if(isset($params['author_id']) && $params['author_id'] == $user || $params['author_id'] = 1){
+       
+        if(isset($params['author_id']) && $params['author_id'] == $user || $user == User::WEBMASTER){
             return true;
+       
+        }else{
+            return false;
         }
-       return  false;
+      
     }
 }
